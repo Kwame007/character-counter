@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  <link rel="stylesheet" href="./style.css">
+
+  <title>Frontend Mentor | Character counter</title>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <img src="./assets/images/logo-light-theme.svg" alt="Logo" class="header__logo">
+    <button class="header__theme-toggle">
+      <img src="./assets/images/icon-moon.svg" alt="Moon Icon" class="header__theme-icon">
+    </button>
+  </header>
+
+  <main class="container">
+    <header class="card__header">
+      <h1 class="card__title">Analyze your text in real-time.</h1>
+    </header>
+    <!-- input section -->
+    <section class="card__body">
+      <div class="card__textarea-wrapper">
+        <textarea id="text-input" class="card__textarea" placeholder="Start typing here...(Place your text here)"></textarea>
+      </div>
+      <div class="card__options">
+        <fieldset class="card__options-group">
+          <div class="card__option card__option--exclude">
+            <input type="checkbox" id="exclude-spaces" class="card__checkbox">
+            <label for="exclude-spaces" class="card__label">Exclude Spaces</label>
+          </div>
+          <div class="card__option card__option--character">
+            <input type="checkbox" id="char-limit" class="card__checkbox">
+            <label for="char-limit" class="card__label">Set Character Limit</label>
+          </div>
+        </fieldset>
+        <p class="card__reading-time">Approx. reading time: &lt;1 minute</p>
+      </div>
+    </section>
+    <!-- results section -->
+    <section class="results">
+      <div class="results__cards">
+        <article class="results__card results__card--characters">
+          <h2 class="results__value">00</h2>
+          <p class="results__description">Total Characters</p>
+          <img src="./assets/images/pattern-character-count.svg" alt="background svg" class="results__image results__image--characters">
+        </article>
+        <article class="results__card results__card--words">
+          <h2 class="results__value">00</h2>
+          <p class="results__description">Word Count</p>
+          <img src="./assets/images/pattern-word-count.svg" alt="word-svg" class="results__image results__image--words">
+        </article>
+        <article class="results__card results__card--sentences">
+          <h2 class="results__value">00</h2>
+          <p class="results__description">Sentence Count</p>
+          <img src="./assets/images/pattern-sentence-count.svg" alt="sentence" class="results__image results__image--sentences">
+        </article>
+      </div>
+      <section class="results__letter-density">
+        <h3 class="results__letter-density-title">Letter Density</h3>
+        <p class="results__letter-density-description">No characters found. Start typing to see letter density.</p>
+      </section>
+    </section>
+  </main>
+</body>
+
+</html>
