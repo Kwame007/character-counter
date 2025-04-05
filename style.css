@@ -18,6 +18,10 @@ fieldset{
     border: none;
 }
 
+textarea{
+    resize: none;
+}
+
 /* header */
 .header {
     display: flex;
