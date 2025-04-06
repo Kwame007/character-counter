@@ -169,6 +169,51 @@ textarea{
     letter-spacing: -0.6px;
 }
 
+.results__letter-density-graph{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+    }
+.results__letter-density-bar{
+        display: grid;
+        grid-template-columns: auto 2fr auto;
+        align-items: center;
+        gap: 1rem;
+        flex: 1;
+    }
+
+.results__letter-density-bar p{
+        display: flex;
+    }
+.results__letter-density-bar-container{
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 25px;
+    overflow: hidden;
+    height: 12px;
+    }
+
+.results__letter-density-bar-fill {
+    height: 100%;
+    background-color: #D3A0FA;
+    width: 0;
+    transition: width 0.4s ease;
+    }
+.results__letter-density-button{
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #12131A;
+        font-size: 20px;
+        line-height: 140%;
+        letter-spacing: -0.6px;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+}
+
 /* media queries */
 @media screen and (min-width: 600px) and (max-width: 1024px) {
     body {
@@ -220,6 +265,9 @@ textarea{
         line-height: 100%;
         letter-spacing: -1px;
     }
+
+    
+
 }
 
 @media screen and (min-width: 1024px) {
