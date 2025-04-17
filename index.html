@@ -14,9 +14,15 @@
 <body>
   <!-- Header -->
   <header class="header">
-    <img src="./assets/images/logo-light-theme.svg" alt="Logo" class="header__logo">
+     <a href="/" class="nav__logo nav__logo--dark">
+       <img src="./assets/images/logo-light-theme.svg" alt="Logo" class="header__logo header__logo--light">
+     </a>
+     <a href="/" class="nav__logo nav__logo--light">
+      <img src="./assets/images/logo-dark-theme.svg" alt="Logo" class="header__logo header__logo--dark">
+      </a>
     <button class="header__theme-toggle">
-      <img src="./assets/images/icon-moon.svg" alt="Moon Icon" class="header__theme-icon">
+      <img src="./assets/images/icon-moon.svg" alt="Moon Icon" class="header__theme-icon icon-moon">
+        <img src="./assets/images/icon-sun.svg" alt="Light Icon" class="header__theme-icon icon-sun">
     </button>
   </header>
 
@@ -29,18 +35,42 @@
       <div class="card__textarea-wrapper">
         <textarea id="text-input" class="card__textarea" placeholder="Start typing here...(Place your text here)"></textarea>
       </div>
+      <div class="card__error card__error--hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="card__error-icon" width="16" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12" y2="16"></line>
+        </svg>
+        <p class="card__error-text"></p>
+      </div>
       <div class="card__options">
         <fieldset class="card__options-group">
+          <!-- <label class="checkbox-container">
+            Subscribe to our newsletter
+            <input type="checkbox">
+            <span class="checkmark"></span>
+          </label> -->
           <div class="card__option card__option--exclude">
+            <label class="checkbox-container card__label" for="exclude-spaces">
+            Exclude Spaces
             <input type="checkbox" id="exclude-spaces" class="card__checkbox">
-            <label for="exclude-spaces" class="card__label">Exclude Spaces</label>
+            <span class="checkmark"></span>
+          </label>
+            <!-- <input type="checkbox" id="exclude-spaces" class="card__checkbox">
+            <label for="exclude-spaces" class="card__label">Exclude Spaces</label> -->
           </div>
           <div class="card__option card__option--character">
+            <label class="checkbox-container card__label" for="char-limit" >
+            Set Character Limit
             <input type="checkbox" id="char-limit" class="card__checkbox">
-            <label for="char-limit" class="card__label">Set Character Limit</label>
+            <span class="checkmark"></span>
+          </label>
+            <!-- <input type="checkbox" id="char-limit" class="card__checkbox">
+            <label for="char-limit" class="card__label">Set Character Limit</label> -->
+            <input type="text" id="character-limit" class="card__limit card__limit--hidden">
           </div>
         </fieldset>
-        <p class="card__reading-time">Approx. reading time: &lt;1 minute</p>
+        <p class="card__reading-time">Approx. reading time: <span class="card__reading-time-value">0 minutes</span></p>
       </div>
     </section>
     <!-- results section -->
@@ -64,51 +94,18 @@
       </div>
       <section class="results__letter-density">
         <h3 class="results__letter-density-title">Letter Density</h3>
-        <div class="results__letter-density-graph">
-          <div class="results__letter-density-bar">
-            <p>E</p>
-            <div class="results__letter-density-bar-container">
-              <div class="results__letter-density-bar-fill" style="width: 60%;"></div>
-            </div>
-            <p>40 <span>(16.06%)</span></p>
-          </div>
-          <div class="results__letter-density-bar">
-            <p>I</p>
-            <div class="results__letter-density-bar-container">
-              <div class="results__letter-density-bar-fill" style="width: 50%;"></div>
-            </div>
-            <p>29<span>(11.65%)</span></p>
-          </div>
-          <div class="results__letter-density-bar">
-            <p>T</p>
-            <div class="results__letter-density-bar-container">
-              <div class="results__letter-density-bar-fill" style="width: 40%;"></div>
-            </div>
-            <p>28<span>(11.24%)</span></p>
-          </div>
-          <div class="results__letter-density-bar">
-            <p>O</p>
-            <div class="results__letter-density-bar-container">
-              <div class="results__letter-density-bar-fill" style="width: 30%;"></div>
-            </div>
-            <p>22<span>(8.84%)</span></p>
-          </div>
-          <div class="results__letter-density-bar">
-            <p>N</p>
-            <div class="results__letter-density-bar-container">
-              <div class="results__letter-density-bar-fill" style="width: 20%;"></div>
-            </div>
-            <p>21 <span>(8.43%)</span></p>
-          </div>
-        </div>
-        <button class="results__letter-density-button">
-          See more
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
+        <div class="results__letter-density-graph"></div> 
+        <p class="results__letter-density-description"></p>
+        <button id="showMoreBtn" class="results__letter-density-button hidden">
+          <span class="btn-text">Show More</span>
+          <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+          </svg>
         </button>
-        <!-- <p class="results__letter-density-description">No characters found. Start typing to see letter density.</p> -->
       </section>
     </section>
   </main>
+  <script src="./script.js"></script>
 </body>
 
 </html>
