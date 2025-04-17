@@ -132,7 +132,7 @@ function letterDensity(inputValue) {
   // Re-append the SVG so it's not overwritten by textContent
   showMoreBtn.appendChild(svg);
 
-  // Rotate the chevron
+  // Rotate the chevron!
   showMoreBtn.classList.toggle('expanded', isExpanded);
   };
   }
