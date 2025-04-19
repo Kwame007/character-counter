@@ -1,5 +1,4 @@
 // select DOM elements
-const body = document.getElementById('body')
 const textInput = document.getElementById("text-input");
 const excludeSpaces  = document.getElementById("exclude-spaces");
 const charLimit  = document.getElementById("char-limit");
@@ -13,12 +12,29 @@ const limit = document.getElementById('limit');
 const letterDensityDescription = document.querySelector('.results__letter-density-description');
 const showMoreBtn = document.querySelector('.results__letter-density-button');
 const btnText = document.querySelector('.btn-text');
-const svg = document.querySelector('.chevron');
 
-
-
+let previousLimitValue = '';
 letterDensityGraph.textContent = 'No characters found. Start typing to see letter density.';
 
+
+// apply saved theme
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem("theme", theme);
+}
+
+// apply theme from localStorage
+document.addEventListener("DOMContentLoaded", () => {
+  const savedTheme = localStorage.getItem("theme") || "light";
+  applyTheme(savedTheme);
+});
+
+// toggle theme
+document.getElementById("theme-toggle").addEventListener("click", () => {
+  const currentTheme = document.documentElement.dataset.theme;
+  const newTheme = currentTheme === "dark" ? "light" : "dark";
+  applyTheme(newTheme);
+});
 
 // calculate word count
 function countWords(str) {
@@ -36,6 +52,7 @@ function padIfLessThan10(value) {
   return value < 10 ? String(value).padStart(2, '0') : value;
 }
 
+// calculate letter density
 function letterDensity(inputValue) {
   const characters = inputValue.toUpperCase().replace(/[^A-Z]/g, '');
   const totalCharacters = characters.length;
@@ -51,6 +68,7 @@ function letterDensity(inputValue) {
   letterDensityDescription.innerHTML = '';
   showMoreBtn.classList.add('hidden');
   showMoreBtn.textContent = 'Show More';
+  showMoreBtn.style.color= 'var(--primary-text)';
 
   if (sortedCharacters.length === 0) {
     letterDensityGraph.textContent = 'No characters found. Start typing to see letter density.';
@@ -59,7 +77,7 @@ function letterDensity(inputValue) {
     letterDensityGraph.style.display = 'flex';
   }
 
-  const showLimit = 3;
+  const showLimit = 5;
   const rows = [];
 
   sortedCharacters.forEach(([letter, count], index) => {
@@ -95,11 +113,6 @@ function letterDensity(inputValue) {
 
     letterDensityDescription.appendChild(row);
 
-    // Animate bar fill
-    requestAnimationFrame(() => {
-      barFill.classList.add('animate');
-    });
-
     rows.push(row);
   });
 
@@ -128,32 +141,25 @@ function letterDensity(inputValue) {
   // Only change the button label text — not the SVG!
   btnText.textContent = isExpanded ? 'Show Less' : 'Show More';
 
-
-  // Re-append the SVG so it's not overwritten by textContent
-  showMoreBtn.appendChild(svg);
-
   // Rotate the chevron!
   showMoreBtn.classList.toggle('expanded', isExpanded);
   };
   }
-
 }
 
+function updateResults(event) {
+  // Get every text value
+  const textValue = event.target.value;
 
-// listen for user input
-textInput.addEventListener("keyup", (e) => {
-  // get every text value
-  const textValue = e.target.value;
-
-  // set padded values
+  // Set padded values
   const paddedWordCount = padIfLessThan10(countWords(textValue));
   const paddedSentenceCount = padIfLessThan10(textValue.split(/[.!?]/).length - 1);
 
   let charCount;
 
-  // check if exclude spaces checked
+  // Check if exclude spaces is checked
   if (excludeSpaces.checked) {
-    // remove spaces
+    // Remove spaces
     charCount = textValue.replace(/\s+/g, '').length;
   } else {
     charCount = textValue.length;
@@ -161,162 +167,139 @@ textInput.addEventListener("keyup", (e) => {
 
   const paddedCharCount = padIfLessThan10(charCount);
 
-  // check if character limit checked
-  if (charLimit.checked && Number(limitInput.value) > 0) {
+  // Check if character limit is checked
+  if (charLimit.checked && !isNaN(Number(limitInput.value)) && Number(limitInput.value) > 0) {
     const limit = Number(limitInput.value);
 
     if (charCount > limit) {
-      textInput.style.border = 'none';
-      textInput.style.boxShadow = "0px 0px 8px 0px rgba(218,55,1,0.8)";
-
-      // show error message
-      errorMessage.classList.remove('card__error--hidden');
-      errorMessage.style.display = 'flex';
-
-      errorText.textContent = `Limit reached! Your text exceeds ${limit} characters`
+      applyErrorState(`Limit reached! Your text exceeds ${limit} characters`);
     } else {
-      textInput.style.boxShadow = "0px 0px 10px 0px #c27cf8";
-
-       // hide error message
-      errorMessage.classList.add('card__error--hidden');
-      errorMessage.style.display = 'none';
-      
+      resetErrorState();
     }
+  } else {
+    // Reset error state if charLimit is not checked
+    resetErrorState();
   }
-
+  
   // Update results with padded values
   resultsValues[0].textContent = paddedCharCount;
   resultsValues[1].textContent = paddedWordCount;
   resultsValues[2].textContent = paddedSentenceCount;
 
-  // show estimated reading time
-  readingTime.textContent = ` ${Math.ceil(charCount / 200)} minutes`;
+  // Show estimated reading time
+  readingTime.textContent = `${Math.ceil(charCount / 200) <= 1 ? '< 1' : Math.ceil(charCount / 200)} minutes`;
 
-  letterDensity(textValue)
-});
+  // Update letter density
+  letterDensity(textValue);
+}
 
+function updateOnFocus() {
+  // Convert limitInput value to a number, default to 0 if invalid
+  let limitValue = isNaN(Number(limitInput.value)) || limitInput.value === '' ? 0 : Number(limitInput.value);
 
-// listen for text input focus
-textInput.addEventListener('focus',()=>{
-  let limitValue = limitInput.value;
-if (textInput.value.length > limitValue && charLimit.checked) {
+  // Recalculate charCount based on excludeSpaces
+  const charCount = excludeSpaces.checked
+    ? textInput.value.replace(/\s+/g, '').length
+    : textInput.value.length;
 
-      textInput.style.border = 'none';
-      textInput.style.boxShadow = "0px 0px 8px 0px rgba(218,55,1,0.8)";
-
-      // show error message
-      errorMessage.classList.remove('card__error--hidden');
-      errorMessage.style.display = 'flex';
-
-      errorText.textContent = `Limit reached! Your text exceeds ${limitValue} characters`
-
-    } else {
-      textInput.style.boxShadow = "0px 0px 10px 0px #c27cf8";
-    }
-
-    if(Number(limitInput.value) === 0){
-      limitValue = 0
-      // set limit value to zero
-      limitInput.value = limitValue;
-    }
-  })
-
-  // listen for text input blur
-  textInput.addEventListener('blur',()=>{
-    textInput.style.border = '1px solid #e4e4ef';
-    textInput.style.boxShadow = "none";
-  })
-
-  // listen for exclude spaces checked
-  excludeSpaces.addEventListener('change',()=>{
-    const limit = Number(limitInput.value);
-    let value;
-
-    if(excludeSpaces.checked){
-      value =textInput.value.replace(/\s+/g, '').length;
-      // update total characters
-      resultsValues[0].textContent =padIfLessThan10(value);
-
-    }else{
-      value = textInput.value.length;
-        resultsValues[0].textContent = padIfLessThan10(value);
-    }
-
-    if(charLimit.checked ){
-    
-      if(value > limit){
-        textInput.style.border = 'none';
-        textInput.style.boxShadow =  "0px 0px 8px 0px rgba(218,55,1,0.8)";
-
-        // show error message
-        errorMessage.classList.remove('card__error--hidden');
-        errorMessage.style.display = 'flex';
-
-        errorText.textContent = `Limit reached! Your text exceeds ${limit} characters`
-      } else {
-      textInput.style.boxShadow =  "0px 0px 10px 0px #c27cf8";
-
-      // hide error message
-        errorMessage.classList.add('card__error--hidden');
-        errorMessage.style.display = 'none';
-      } 
-    }
-  })
-
-
-  // listen for character limit checked
-  charLimit.addEventListener('change',()=>{ 
-  
-    if(charLimit.checked){
-      // show limit input
-      limitInput.classList.remove('card__limit--hidden');
-
-      // set focus on limit input
-      limitInput.focus();
-    }else{
-      // clear limit input
-      limitInput.value = '';
-
-      // hide limit input
-      limitInput.classList.add('card__limit--hidden');
-
-      textInput.style.boxShadow =  "0px 0px 10px 0px #c27cf8";
-
-      // hide error message
-        errorMessage.classList.add('card__error--hidden');
-        errorMessage.style.display = 'none';
-    }
-  })
-
-
-// listen for limit
-limitInput.addEventListener('keyup',()=>{
-  const textInputValue = textInput.value;
-  let limitValue;
-
-  if(isNaN(Number(limitInput.value))){
-    limitInput.value = '';
-    limitValue = '';
-  }else{
-    limitValue= Number(limitInput.value);
+  // Check if the character limit is enabled and exceeded
+  if (charLimit.checked && charCount > limitValue) {
+    // Apply error state
+    applyErrorState(`Limit reached! Your text exceeds ${limitValue} characters`);
+  } else {
+    // Reset error state
+    resetErrorState();
   }
 
-  if(textInputValue.length > limitValue){
-    textInput.style.border = 'none';
-    textInput.style.boxShadow =  "0px 0px 8px 0px rgba(218,55,1,0.8)";
+  // Ensure limitValue is set to 0 if the input is invalid
+  if (limitValue === 0) {
+    limitInput.value = limitValue;
+  }
+}
 
-    // show error message
-    errorMessage.classList.remove('card__error--hidden');
-    errorMessage.style.display = 'flex';
+function updateOnCharLimit() {
+  if (charLimit.checked) {
+    // Show limit input
+    limitInput.classList.remove('card__limit--hidden');
 
-    errorText.textContent = `Limit reached! Your text exceeds ${limitValue} characters`
-  }else{
-    textInput.style.boxShadow =  "0px 0px 10px 0px #c27cf8";
+    // Restore previous value or set focus if empty
+    if (limitInput.value === '') {
+      limitInput.value = previousLimitValue;
+      limitInput.focus();
+    }
+  } else {
+    // Save current value before clearing
+    previousLimitValue = limitInput.value;
 
-    // hide error message
+    // Clear and hide limit input
+    limitInput.value = '';
+    limitInput.classList.add('card__limit--hidden');
+
+    // Reset text input box shadow
+    textInput.style.boxShadow = "0px 0px 10px 0px var(--purple-light)";
+
+    // Hide error message
     errorMessage.classList.add('card__error--hidden');
     errorMessage.style.display = 'none';
   }
-})
+}
 
-// toggle dark theme
+  function updateCharacterCountAndLimit() {
+  // Get the character limit, default to 0 if invalid
+  const limitValue = isNaN(Number(limitInput.value)) || limitInput.value === '' ? 0 : Number(limitInput.value);
+
+  // Calculate the character count based on whether spaces are excluded
+  const value = excludeSpaces.checked
+    ? textInput.value.replace(/\s+/g, '').length
+    : textInput.value.length;
+
+  // Update the total characters display
+  resultsValues[0].textContent = padIfLessThan10(value);
+
+  // Check if the character limit is enabled and valid
+  if (charLimit.checked && limitValue > 0) {
+    if (value > limitValue) {
+      applyErrorState(`Limit reached! Your text exceeds ${limitValue} characters`);
+    } else {
+      resetErrorState();
+    }
+  } else {
+    // Reset error state if charLimit is not checked
+    resetErrorState();
+  }
+}
+
+function updateOnExcludeSpaces() {
+  updateCharacterCountAndLimit();
+}
+
+function updateOnLimitChange() {
+  updateCharacterCountAndLimit();
+}
+
+// Helper function to apply error state
+function applyErrorState(message) {
+  textInput.style.border = 'none';
+  textInput.style.boxShadow = "0px 0px 8px 0px var(--orange-light)";
+  errorMessage.classList.remove('card__error--hidden');
+  errorMessage.style.display = 'flex';
+  errorText.textContent = message;
+}
+
+// Helper function to reset error state
+function resetErrorState() {
+  textInput.style.border = '1px solid var(--textfield-border)';
+  textInput.style.boxShadow = "0px 0px 10px 0px var(--purple-dark)";
+  errorMessage.classList.add('card__error--hidden');
+  errorMessage.style.display = 'none';
+}
+
+
+// event listeners
+textInput.addEventListener("input", updateResults);
+textInput.addEventListener('focus',updateOnFocus)
+textInput.addEventListener('blur',()=>{textInput.style.boxShadow = "none"})
+excludeSpaces.addEventListener('change',updateOnExcludeSpaces)
+charLimit.addEventListener('change',updateOnCharLimit)
+limitInput.addEventListener('input',updateOnLimitChange)
+
