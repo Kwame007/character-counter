@@ -13,16 +13,16 @@
 
 <body>
   <!-- Header -->
-  <header class="header">
-     <a href="/" class="nav__logo nav__logo--dark">
-       <img src="./assets/images/logo-light-theme.svg" alt="Logo" class="header__logo header__logo--light">
+  <header class="header container">
+     <a href="/" class="header__logo--dark">
+      <img src="./assets/images/logo-dark-theme.svg" alt="Logo" class="header__logo">
      </a>
-     <!-- <a href="/" class="nav__logo nav__logo--light">
-      <img src="./assets/images/logo-dark-theme.svg" alt="Logo" class="header__logo header__logo--dark">
-      </a> -->
-    <button class="header__theme-toggle">
-      <img src="./assets/images/icon-moon.svg" alt="Moon Icon" class="header__theme-icon icon-moon">
-        <!-- <img src="./assets/images/icon-sun.svg" alt="Light Icon" class="header__theme-icon icon-sun"> -->
+     <a href="/" class="header__logo--light">
+       <img src="./assets/images/logo-light-theme.svg" alt="Logo" class="header__logo">
+     </a>
+    <button id="theme-toggle" class="header__theme-toggle">
+      <img src="./assets/images/icon-moon.svg" alt="Moon Icon" class="header__theme-icon header__theme-icon--dark">
+      <img src="./assets/images/icon-sun.svg" alt="Light Icon" class="header__theme-icon header__theme-icon--light">
     </button>
   </header>
 
@@ -44,30 +44,17 @@
         <p class="card__error-text"></p>
       </div>
       <div class="card__options">
-        <fieldset class="card__options-group">
-          <!-- <label class="checkbox-container">
-            Subscribe to our newsletter
-            <input type="checkbox">
-            <span class="checkmark"></span>
-          </label> -->
-          <div class="card__option card__option--exclude">
-            <label class="checkbox-container card__label" for="exclude-spaces">
-            Exclude Spaces
-            <input type="checkbox" id="exclude-spaces" class="card__checkbox">
-            <span class="checkmark"></span>
-          </label>
-            <!-- <input type="checkbox" id="exclude-spaces" class="card__checkbox">
-            <label for="exclude-spaces" class="card__label">Exclude Spaces</label> -->
-          </div>
-          <div class="card__option card__option--character">
-            <label class="checkbox-container card__label" for="char-limit" >
-            Set Character Limit
-            <input type="checkbox" id="char-limit" class="card__checkbox">
-            <span class="checkmark"></span>
-          </label>
-            <!-- <input type="checkbox" id="char-limit" class="card__checkbox">
-            <label for="char-limit" class="card__label">Set Character Limit</label> -->
-            <input type="text" id="character-limit" class="card__limit card__limit--hidden">
+        <fieldset class="card__options-checkboxes">
+          <div class="card__options-group">
+            <div class="card__option card__option--exclude">
+              <input type="checkbox" id="exclude-spaces" class="card__checkbox">
+              <label for="exclude-spaces">Exclude Spaces</label>
+            </div>
+            <div class="card__option card__option--character">
+              <input type="checkbox" id="char-limit" class="card__checkbox">
+              <label for="char-limit"> Set Character Limit</label>
+              <input type="text" id="character-limit" class="card__limit card__limit--hidden">
+            </div>
           </div>
         </fieldset>
         <p class="card__reading-time">Approx. reading time: <span class="card__reading-time-value">0 minutes</span></p>
@@ -98,14 +85,10 @@
         <p class="results__letter-density-description"></p>
         <button id="showMoreBtn" class="results__letter-density-button hidden">
           <span class="btn-text">Show More</span>
-          <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-          </svg>
         </button>
       </section>
     </section>
   </main>
   <script src="./script.js"></script>
 </body>
-
 </html>
