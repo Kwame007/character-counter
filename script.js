@@ -13,6 +13,8 @@ const letterDensityDescription = document.querySelector('.results__letter-densit
 const showMoreBtn = document.querySelector('.results__letter-density-button');
 const btnText = document.querySelector('.btn-text');
 
+
+
 let previousLimitValue = '';
 letterDensityGraph.textContent = 'No characters found. Start typing to see letter density.';
 
@@ -40,6 +42,22 @@ document.getElementById("theme-toggle").addEventListener("click", () => {
 function countWords(str) {
   let words = str.match(/\b\w+\b/g);
   return words ? words.length : 0;
+}
+
+function calcCharacterLength(textInput){
+if (!textInput) {
+  return 0;
+}
+
+return textInput.length
+}
+
+function calcSentenceCount(textInput){
+  // check if empty string
+  if (!textInput) {
+  return 0;
+}
+return textInput.split(/[.!?]/).length - 1
 }
 
 // calculate reading time
@@ -153,7 +171,7 @@ function updateResults(event) {
 
   // Set padded values
   const paddedWordCount = padIfLessThan10(countWords(textValue));
-  const paddedSentenceCount = padIfLessThan10(textValue.split(/[.!?]/).length - 1);
+  const paddedSentenceCount = padIfLessThan10(calcSentenceCount(textValue));
 
   let charCount;
 
@@ -162,7 +180,7 @@ function updateResults(event) {
     // Remove spaces
     charCount = textValue.replace(/\s+/g, '').length;
   } else {
-    charCount = textValue.length;
+    charCount = calcCharacterLength(textValue);
   }
 
   const paddedCharCount = padIfLessThan10(charCount);
