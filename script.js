@@ -321,3 +321,12 @@ excludeSpaces.addEventListener('change',updateOnExcludeSpaces)
 charLimit.addEventListener('change',updateOnCharLimit)
 limitInput.addEventListener('input',updateOnLimitChange)
 
+
+// exporrt function
+
+module.exports = {
+  calcCharacterLength,
+  countWords,
+  calcSentenceCount,
+  calcReadingTime
+}
