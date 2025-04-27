@@ -249,7 +249,9 @@ function updateOnCharLimit() {
       limitInput.value = previousLimitValue;
       limitInput.focus();
     }
-  } else {
+    // Prevent typing and update of letter density when limit is reached
+    textInput.addEventListener('input', preventExceedingLimitAndUpdateDensity);
+    } else {
     // Save current value before clearing
     previousLimitValue = limitInput.value;
 
@@ -263,8 +265,30 @@ function updateOnCharLimit() {
     // Hide error message
     errorMessage.classList.add('card__error--hidden');
     errorMessage.style.display = 'none';
+
+    // Remove the event listener to allow normal typing
+    textInput.removeEventListener('input', preventExceedingLimitAndUpdateDensity);
+    }
   }
-}
+
+  function preventExceedingLimitAndUpdateDensity(event) {
+    const limitValue = isNaN(Number(limitInput.value)) || limitInput.value === '' ? 0 : Number(limitInput.value);
+
+    if (charLimit.checked && limitValue > 0) {
+    const charCount = excludeSpaces.checked
+      ? textInput.value.replace(/\s+/g, '').length
+      : textInput.value.length;
+
+    if (charCount >= limitValue && event.inputType !== 'deleteContentBackward') {
+      event.preventDefault();
+      applyErrorState(`Limit reached! Your text exceeds ${limitValue} characters`);
+      textInput.value = textInput.value.slice(0, limitValue);
+    }
+    }
+
+    // Update letter density regardless of limit
+    letterDensity(textInput.value);
+  }
 
   function updateCharacterCountAndLimit() {
   // Get the character limit, default to 0 if invalid
@@ -325,12 +349,18 @@ excludeSpaces.addEventListener('change',updateOnExcludeSpaces)
 charLimit.addEventListener('change',updateOnCharLimit)
 limitInput.addEventListener('input',updateOnLimitChange)
 
-
-// exporrt function
-
-module.exports = {
-  calcCharacterLength,
-  countWords,
-  calcSentenceCount,
-  calcReadingTime
+// Helper function to clean up event listeners
+function removeEventListeners() {
+  textInput.removeEventListener("input", updateResults);
+  textInput.removeEventListener("focus", updateOnFocus);
+  textInput.removeEventListener("blur", () => {
+    textInput.style.boxShadow = "none";
+  });
+  excludeSpaces.removeEventListener("change", updateOnExcludeSpaces);
+  charLimit.removeEventListener("change", updateOnCharLimit);
+  limitInput.removeEventListener("input", updateOnLimitChange);
 }
+
+
+// remove event listeners
+window.addEventListener("beforeunload", removeEventListeners);
