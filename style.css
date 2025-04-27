@@ -327,6 +327,9 @@ textarea{
     }
 
 .results__letter-density-button{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         color: var(--primary-text);
         font-size: 18px;
         line-height: 140%;
@@ -340,15 +343,12 @@ textarea{
         margin-top: 16px;
         transition: color 0.2s;
 }
+.hidden{
+    display: none;}
 
-.results__letter-density-button .chevron {
+.chevron {
   transition: transform 0.3s ease;
 }
-
-/* Rotates the chevron when expanded */
-/* .results__letter-density-button.expanded .chevron {
-  transform: rotate(180deg);
-} */
 
 .card__options-checkboxes {
   color: var(--secondary-text);

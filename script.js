@@ -11,7 +11,7 @@ const letterDensityGraph = document.querySelector('.results__letter-density-grap
 const limit = document.getElementById('limit');
 const letterDensityDescription = document.querySelector('.results__letter-density-description');
 const showMoreBtn = document.querySelector('.results__letter-density-button');
-const btnText = document.querySelector('.btn-text');
+const btnText = document.getElementById('showMoreBtn');
 
 let previousLimitValue = '';
 letterDensityGraph.textContent = 'No characters found. Start typing to see letter density.';
@@ -67,7 +67,6 @@ function letterDensity(inputValue) {
   letterDensityGraph.innerHTML = '';
   letterDensityDescription.innerHTML = '';
   showMoreBtn.classList.add('hidden');
-  showMoreBtn.textContent = 'Show More';
   showMoreBtn.style.color= 'var(--primary-text)';
 
   if (sortedCharacters.length === 0) {
@@ -116,8 +115,9 @@ function letterDensity(inputValue) {
     rows.push(row);
   });
 
+ 
   // Show More / Show Less logic
-  if (sortedCharacters.length > showLimit) {
+  if (sortedCharacters.length > showLimit) {  
     showMoreBtn.classList.remove('hidden');
 
     let isExpanded = false;
@@ -137,13 +137,17 @@ function letterDensity(inputValue) {
         }
       }
     });
+    const text = document.querySelector('.text')
+    const svg = document.querySelector('.chevron')
 
-  // Only change the button label text — not the SVG!
-  btnText.textContent = isExpanded ? 'Show Less' : 'Show More';
+    text.textContent = isExpanded ? 'Show Less' : 'Show More';
 
-  // Rotate the chevron!
-  showMoreBtn.classList.toggle('expanded', isExpanded);
-  };
+    if (isExpanded) {
+      svg.style.transform = 'rotate(180deg)';
+    } else {
+      svg.style.transform = 'rotate(0deg)';
+    }
+    };
   }
 }
 
