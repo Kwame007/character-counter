@@ -104,6 +104,7 @@ textarea{
     border-radius: 0.4rem;
     border: 1px solid var(--toggle-button);
     background-color: var(--primary);
+    cursor: pointer;
 }
 
 .header__theme-icon {
@@ -328,6 +329,9 @@ textarea{
     }
 
 .results__letter-density-button{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         color: var(--primary-text);
         font-size: 18px;
 
@@ -343,9 +347,10 @@ textarea{
         margin-top: 16px;
         transition: color 0.2s;
 }
+.hidden{
+    display: none;}
 
-
-.results__letter-density-button .chevron {
+.chevron {
   transition: transform 0.3s ease;
 }
 
